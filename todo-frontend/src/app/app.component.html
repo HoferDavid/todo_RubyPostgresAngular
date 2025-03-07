@@ -20,21 +20,43 @@
 
   <!-- Display error if any -->
   @if (error()) {
-    <p style="color: red">{{ error() }}</p>
+  <p style="color: red">{{ error() }}</p>
   }
 </div>
 
-<!-- Display tasks with checkbox and delete button -->
+<!-- Display tasks with checkbox, edit, and delete button -->
 <ul>
   @for (task of tasks(); track task.id) {
-    <li>
-      <input
-        type="checkbox"
-        [checked]="task.completed"
-        (change)="toggleCompleted(task.id, task.completed)"
-      />
-      {{ task.title }} (Completed: {{ task.completed ? 'Yes' : 'No' }})
-      <button (click)="deleteTask(task.id)" style="margin-left: 10px; color: red">Delete</button>
-    </li>
+  <li>
+    @if (editingTaskId() === task.id) {
+    <!-- Edit mode -->
+    <input
+      type="text"
+      [value]="editingTaskTitle()"
+      (input)="editingTaskTitle.set($any($event.target).value)"
+      (keyup.enter)="saveEdit(task.id)"
+    />
+    <button (click)="saveEdit(task.id)" style="margin-left: 10px; color: green">
+      Save
+    </button>
+    <button (click)="cancelEdit()" style="margin-left: 10px; color: gray">
+      Cancel
+    </button>
+    } @else {
+    <!-- Display mode -->
+    <input
+      type="checkbox"
+      [checked]="task.completed"
+      (change)="toggleCompleted(task.id, task.completed)"
+    />
+    {{ task.title }} (Completed: {{ task.completed ? "Yes" : "No" }})
+    <button (click)="startEditing(task)" style="margin-left: 10px; color: blue">
+      Edit
+    </button>
+    <button (click)="deleteTask(task.id)" style="margin-left: 10px; color: red">
+      Delete
+    </button>
+    }
+  </li>
   }
 </ul>

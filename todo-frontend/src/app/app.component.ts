@@ -19,6 +19,10 @@ export class AppComponent implements OnInit {
   // Signal for the new task input
   newTaskTitle = signal('');
 
+  // Signal to track which task is being edited
+  editingTaskId = signal<number | null>(null);
+  editingTaskTitle = signal<string>('');
+
   ngOnInit() {
     this.taskService.loadTasks(); // Load initial tasks
   }
@@ -50,5 +54,28 @@ export class AppComponent implements OnInit {
   // Set the filter
   setFilter(filter: TaskFilter) {
     this.taskService.setFilter(filter);
+  }
+
+  // Start editing a task
+  startEditing(task: Task) {
+    if (task.id !== undefined) {
+      this.editingTaskId.set(task.id);
+      this.editingTaskTitle.set(task.title);
+    }
+  }
+
+  // Save the edited task
+  saveEdit(id: number | undefined) {
+    if (id !== undefined && this.editingTaskTitle().trim()) {
+      this.taskService.updateTask(id, { title: this.editingTaskTitle() });
+      this.editingTaskId.set(null);
+      this.editingTaskTitle.set('');
+    }
+  }
+
+  // Cancel editing
+  cancelEdit() {
+    this.editingTaskId.set(null);
+    this.editingTaskTitle.set('');
   }
 }
