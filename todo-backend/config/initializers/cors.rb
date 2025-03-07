@@ -4,7 +4,7 @@ Rails.application.config.middleware.insert_before 0, Rack::Cors do
 
     resource '*',
       headers: :any,
-      methods: [:get, :post, :options], # Allow GET, POST and OPTIONS (for PreFlight)
+      methods: [:get, :post, :delete, :patch, :options], # Allow GET, POST and OPTIONS (for PreFlight)
       credentials: true
   end
 end

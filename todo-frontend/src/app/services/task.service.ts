@@ -83,4 +83,25 @@ export class TaskService {
       );
     }
   }
+
+  // Update a task's status (e.g., toggle completed)
+  async updateTask(id: number, updates: Partial<Task>) {
+    try {
+      const response = await fetch(`${this.apiUrl}/${id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ task: updates }),
+      }).then((res) => res.json());
+      this.tasks.update((tasks) =>
+        tasks.map((task) => (task.id === id ? { ...task, ...response } : task))
+      ); // Update tasks signal
+      this.error.set(null); // Clear any previous errors
+    } catch (err) {
+      this.error.set(
+        `Failed to update task: ${
+          err instanceof Error ? err.message : 'Unknown error'
+        }`
+      );
+    }
+  }
 }

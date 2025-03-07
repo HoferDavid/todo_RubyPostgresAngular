@@ -32,4 +32,18 @@ export class AppComponent implements OnInit {
       this.newTaskTitle.set(''); // Clear input
     }
   }
+
+  // Delete a task, with type safety for id
+  deleteTask(id: number | undefined) {
+    if (id !== undefined) {
+      this.taskService.deleteTask(id);
+    }
+  }
+
+  // Toggle the completed status of a task
+  toggleCompleted(id: number | undefined, completed: boolean) {
+    if (id !== undefined) {
+      this.taskService.updateTask(id, { completed: !completed });
+    }
+  }
 }
