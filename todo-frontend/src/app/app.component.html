@@ -1,5 +1,12 @@
 <h1>Todo List</h1>
 
+<!-- Filter buttons -->
+<div>
+  <button (click)="setFilter('all')">All</button>
+  <button (click)="setFilter('completed')">Completed</button>
+  <button (click)="setFilter('pending')">Pending</button>
+</div>
+
 <!-- Reactive input with signal binding -->
 <div>
   <input
@@ -13,23 +20,21 @@
 
   <!-- Display error if any -->
   @if (error()) {
-  <p style="color: red">{{ error() }}</p>
+    <p style="color: red">{{ error() }}</p>
   }
 </div>
 
 <!-- Display tasks with checkbox and delete button -->
 <ul>
   @for (task of tasks(); track task.id) {
-  <li>
-    <input
-      type="checkbox"
-      [checked]="task.completed"
-      (change)="toggleCompleted(task.id, task.completed)"
-    />
-    {{ task.title }} (Completed: {{ task.completed ? "Yes" : "No" }})
-    <button (click)="deleteTask(task.id)" style="margin-left: 10px; color: red">
-      Delete
-    </button>
-  </li>
+    <li>
+      <input
+        type="checkbox"
+        [checked]="task.completed"
+        (change)="toggleCompleted(task.id, task.completed)"
+      />
+      {{ task.title }} (Completed: {{ task.completed ? 'Yes' : 'No' }})
+      <button (click)="deleteTask(task.id)" style="margin-left: 10px; color: red">Delete</button>
+    </li>
   }
 </ul>

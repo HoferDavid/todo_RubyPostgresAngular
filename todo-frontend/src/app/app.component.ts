@@ -1,20 +1,20 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
-import { TaskService, Task } from './services/task.service';
+import { Component, OnInit, inject, signal } from '@angular/core';
+import { TaskService, Task, TaskFilter } from './services/task.service';
 
 @Component({
   selector: 'app-root',
-  imports: [],
+  standalone: true,              // Enable standalone component
   templateUrl: './app.component.html',
-  styleUrl: './app.component.css',
+  styleUrls: ['./app.component.css'],
 })
 export class AppComponent implements OnInit {
-  title = 'todo-frontend';
-
-  taskService = inject(TaskService);
+  // Inject TaskService using the new inject() function
+  private taskService = inject(TaskService);
 
   // Access readonly signals from TaskService
-  tasks = this.taskService.getTasks();
+  tasks = this.taskService.getFilteredTasks();
   error = this.taskService.getError();
+  filter = this.taskService.getFilter();
 
   // Signal for the new task input
   newTaskTitle = signal('');
@@ -45,5 +45,10 @@ export class AppComponent implements OnInit {
     if (id !== undefined) {
       this.taskService.updateTask(id, { completed: !completed });
     }
+  }
+
+  // Set the filter
+  setFilter(filter: TaskFilter) {
+    this.taskService.setFilter(filter);
   }
 }
